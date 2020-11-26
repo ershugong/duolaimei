@@ -1,0 +1,116 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<!--<meta http-equiv="Access-Control-Allow-Origin" content="*" />-->
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="favicon.ico" >
+<link rel="Shortcut Icon" href="favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script><![endif]-->
+<!--/meta 作为公共模版分离出去-->
+<!--腾讯地图-->
+<!--<script src="https://map.qq.com/api/gljs?v=1.exp&key=DR5BZ-4JJWI-Q5KGB-5CF7H-ZEMWV-2LBMK"></script>-->
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=DR5BZ-4JJWI-Q5KGB-5CF7H-ZEMWV-2LBMK"></script>
+	<title>添加门店</title>
+<link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+<style>
+	.shop-map {
+		width: 800px;
+		height: 700px;
+		border: 1px solid #F3F3F3;
+	}
+</style>
+<script>
+	var jsonMap = "";
+
+	window.addEventListener(
+		"message",
+		function(event) {
+			// 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
+			var loc = event.data;
+			// closeMyself()
+			// var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+			// parent.layer.close(index); //再执行关闭
+			if (loc && loc.module == "locationPicker") {
+				//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
+				console.log('location', loc); // 获取的选中的地址数据
+				document.getElementById('location').value = JSON.stringify(loc);
+				callbackdata(JSON.stringify(loc));
+				jsonMap = JSON.stringify(loc);
+			}
+			// parent.layer.closeAll();
+			// try {
+			// 	// 如果top.layer不跨域，那么正常弹窗
+			// 	parent.layer.closeAll();
+			// } catch (error) {
+			// 	// 报错后拿到配置，发送到父页面
+			// 	var option = {
+			// 		location: loc
+			// 	}
+			// 	//不能发送top或者发送window，甚至是配置内的function属性都不能发送，只能发送简单的配置对象
+			// 	window.top.postMessage(option, '*')
+			// }
+			// return false;
+		},
+		false
+	);
+	function closeMyself() {
+		var index = parent.layer.getFrameIndex(window.name);
+		parent.layer.close(index);
+	}
+	var callbackdata = function () {
+		// console.log("789");
+		console.log(document.getElementById('location').value);
+		return document.getElementById('location').value;
+		// return e;
+	}
+</script>
+</head>
+<body>
+<div class="shop-map" style="margin: 0 auto">
+	<input type="text" id="location" hidden>
+	<iframe
+		id="mapPage"
+		width="100%"
+		height="100%"
+		frameborder="0"
+		src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=DR5BZ-4JJWI-Q5KGB-5CF7H-ZEMWV-2LBMK&referer=myapp"
+	/>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.page.js"></script>
+
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="lib/jquery/common.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+
+</body>
+</html>

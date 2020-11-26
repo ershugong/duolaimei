@@ -23,49 +23,52 @@
 </head>
 <body>
 <input type="hidden" id="TenantId" name="TenantId" value="" />
-<div class="header"></div>
+<!--<div class="header"></div>-->
 <div class="loginWraper">
 	<div id="loginform" class="loginBox">
-		<form class="form form-horizontal" action="index.html" method="post">
+		<form class="form form-horizontal" method="post">
 			<div class="row cl">
 				<label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
 				<div class="formControls col-xs-8">
-					<input id="" name="" type="text" placeholder="账户" class="input-text size-L">
+					<input id="userName" name="userName" type="text" placeholder="账户" class="input-text size-L">
 				</div>
 			</div>
 			<div class="row cl">
 				<label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
 				<div class="formControls col-xs-8">
-					<input id="" name="" type="password" placeholder="密码" class="input-text size-L">
+					<input id="password" name="password" type="password" placeholder="密码" class="input-text size-L">
 				</div>
 			</div>
+<!--			<div class="row cl">-->
+<!--				<div class="formControls col-xs-8 col-xs-offset-3">-->
+<!--					<input class="input-text size-L" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码:'}" onclick="if(this.value=='验证码:'){this.value='';}" value="验证码:" style="width:150px;">-->
+<!--					<img src="images/VerifyCode.aspx.png">-->
+<!--					<a id="kanbuq" href="javascript:;">看不清，换一张</a>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--			<div class="row cl">-->
+<!--				<div class="formControls col-xs-8 col-xs-offset-3">-->
+<!--					<label for="online">-->
+<!--						<input type="checkbox" name="online" id="online" value="">-->
+<!--						使我保持登录状态</label>-->
+<!--				</div>-->
+<!--			</div>-->
 			<div class="row cl">
 				<div class="formControls col-xs-8 col-xs-offset-3">
-					<input class="input-text size-L" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码:'}" onclick="if(this.value=='验证码:'){this.value='';}" value="验证码:" style="width:150px;">
-					<img src="images/VerifyCode.aspx.png">
-					<a id="kanbuq" href="javascript:;">看不清，换一张</a>
-				</div>
-			</div>
-			<div class="row cl">
-				<div class="formControls col-xs-8 col-xs-offset-3">
-					<label for="online">
-						<input type="checkbox" name="online" id="online" value="">
-						使我保持登录状态</label>
-				</div>
-			</div>
-			<div class="row cl">
-				<div class="formControls col-xs-8 col-xs-offset-3">
-					<input name="" type="submit" class="btn btn-success radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
-					<input name="" type="reset" class="btn btn-default radius size-L" value="&nbsp;取&nbsp;&nbsp;&nbsp;&nbsp;消&nbsp;">
+					<input id="login" name="" type="button" class="btn btn-success radius size-L" style="width: 200px;margin-left: 60px" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
+<!--					<input name="" type="reset" class="btn btn-default radius size-L" value="&nbsp;取&nbsp;&nbsp;&nbsp;&nbsp;消&nbsp;">-->
 				</div>
 			</div>
 		</form>
 	</div>
 </div>
-<div class="footer">Copyright 你的公司名称 by H-ui.admin.page.v3.0</div>
+<!--<div class="footer">Copyright 你的公司名称 by H-ui.admin.page.v3.0</div>-->
 
-<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<!--<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>-->
+<script type="text/javascript" src="lib/jquery/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="lib/jquery/common.js"></script>
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -73,6 +76,38 @@ var _hmt = _hmt || [];
   hm.src = "https://hm.baidu.com/hm.js?080836300300be57b7f34f4b3e97d911";
   var s = document.getElementsByTagName("script")[0]; 
   s.parentNode.insertBefore(hm, s);
+
+  $("#login").click(function () {
+	  var userName = $("#userName").val();
+	  var password = $("#password").val();
+
+	  // $.post(apiHeader + "/user/checkLoginForAdmin",{userName:userName,password:password},function (result) {
+	  // 	console.log(result.data);
+		//   if (result.code == 0 && result.data != null){
+		//   	window.location.href = "index.html";
+		//   }else{
+		//   	layer.msg("用户账户或密码不正确");
+		//   }
+	  // });
+
+	  $.ajax({
+		  contentType: "application/json",
+		  url: apiHeader + "/user/checkLoginForAdmin",
+		  data: {userName:userName,password:password},
+		  type: "GET",
+		  // dataType: "json",
+		  success: function (result) {
+			  if (result.code == 0 && result.data.userName != null){
+				  window.location.href = "index.html";
+			  }else{
+				  layer.msg("用户账户或密码不正确");
+			  }
+		  },
+		  error: function (result) {
+			 alert(result);
+		  }
+	  });
+  })
 })();
 </script>
 </body>

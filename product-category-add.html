@@ -12,7 +12,7 @@
 <![endif]-->
 <link href="static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
 <link href="static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-<link href="lib/icheck/icheck.css" rel="stylesheet" type="text/css" />
+<!--<link href="lib/icheck/icheck.css" rel="stylesheet" type="text/css" />-->
 <link href="lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
 <!--[if IE 6]>
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
@@ -21,31 +21,32 @@
 </head>
 <body>
 <div class="pd-20">
-  <form action="" method="post" class="form form-horizontal" id="form-user-add">
+  <form class="form form-horizontal" id="form-user-add">
     <div class="row cl">
-      <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分类名称：</label>
+      <label class="form-label col-xs-4 col-sm-2" style="text-align: left"><span class="c-red">*</span>分类名称：</label>
       <div class="formControls col-5">
-        <input type="text" class="input-text" value="" placeholder="" id="user-name" name="product-category-name">
+        <input type="text" class="input-text" value="" placeholder="" id="user-name" name="">
       </div>
       <div class="col-5"> </div>
     </div>
     <div class="row cl">
-      <label class="form-label col-xs-4 col-sm-2">备注：</label>
+      <label class="form-label col-xs-4 col-sm-2" style="text-align: left">备注：</label>
       <div class="formControls col-5">
-        <textarea name="" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,100)"></textarea>
+        <textarea id="detail" name="" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,100)"></textarea>
         <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
       </div>
       <div class="col-5"> </div>
     </div>
     <div class="row cl">
       <div class="col-9 col-offset-2">
-        <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+        <input class="btn btn-primary radius" type="button" id="classifySubmit" style="margin-right: 20px;margin-left: 37px" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+        <input class="btn btn-primary radius" type="button" id="classifyDelete" style="background-color: #dd514c;border-color: #f37b1d" value="&nbsp;&nbsp;删除&nbsp;&nbsp;">
       </div>
     </div>
   </form>
 </div>
 <!--_footer 作为公共模版分离出去--> 
-<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/jquery/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script> 
 <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.page.js"></script> 
@@ -54,14 +55,64 @@
 <!--请在下方写此页面业务相关的脚本--> 
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
-<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/jquery/common.js"></script>
 <script type="text/javascript">
 $(function(){
-	$('.skin-minimal input').iCheck({
-		checkboxClass: 'icheckbox-blue',
-		radioClass: 'iradio-blue',
-		increaseArea: '20%'
-	});
+
+  $("#classifySubmit").click(function () {
+    var classifyName = $("#user-name").val();
+    var classifyDetail = $("#detail").val();
+    var id = $("#user-name").attr("name");
+    $.ajax({
+      // contentType: "application/json",
+      url: apiHeader + "/classify/insertClassify",
+      data: {id:id,classifyName: classifyName,classifyDetail: classifyDetail},
+      type: "POST",
+      dataType: "json",
+      success: function(result){
+        if(result.code == 0){
+          layer.msg("操作成功");
+          top.location = "product-category.html";
+        }
+      },
+      error: function(result){
+        layer.msg("添加失败");
+      }
+    })
+  });
+
+  $("#classifyDelete").click(function () {
+    var id = $("#user-name").attr("name");
+    if (id == ""){
+      layer.msg("请选择分类后，再点击删除");
+    }
+
+    $.ajax({
+      // contentType: "application/json",
+      url: apiHeader + "/classify/deleteClassify",
+      data: {id:id},
+      type: "POST",
+      dataType: "json",
+      success: function(result){
+        if(result.code == 0){
+          layer.msg("删除成功");
+          top.location = "product-category.html";
+        }
+      },
+      error: function(result){
+        layer.msg("操作失败");
+      }
+    })
+  });
+
+
+  // $('.skin-minimal input').iCheck({
+  //     checkboxClass: 'icheckbox-blue',
+  //     radioClass: 'iradio-blue',
+  //     increaseArea: '20%'
+  // });
 	
 	
 });

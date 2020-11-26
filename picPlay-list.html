@@ -1,0 +1,285 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="favicon.ico" >
+<link rel="Shortcut Icon" href="favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="static/personal/picture.css" />
+
+	<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script type="text/javascript" src="lib/jquery/jquery-3.5.1.min.js"></script>
+<script>DD_belatedPNG.fix('*');</script><![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>轮播图列表</title>
+</head>
+<body>
+<!--_header 作为公共模版分离出去-->
+<header class="navbar-wrapper">
+	<div class="navbar navbar-fixed-top">
+		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="index.html">陆宝管理后台</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#"></a>
+			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
+				<ul class="cl">
+					<li>超级管理员</li>
+					<li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A"> <i class="Hui-iconfont">&#xe6d5;</i></a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li><a href="login.html">切换账户</a></li>
+							<li><a href="login.html">退出</a></li>
+						</ul>
+					</li>
+					<li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
+							<li><a href="javascript:;" data-val="blue" title="蓝色">蓝色</a></li>
+							<li><a href="javascript:;" data-val="green" title="绿色">绿色</a></li>
+							<li><a href="javascript:;" data-val="red" title="红色">红色</a></li>
+							<li><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></li>
+							<li><a href="javascript:;" data-val="orange" title="橙色">橙色</a></li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</header>
+<!--/_header 作为公共模版分离出去-->
+
+<!--_menu 作为公共模版分离出去-->
+<aside class="Hui-aside">
+
+	<div class="menu_dropdown bk_2">
+		<dl id="menu-picture">
+			<dt><i class="Hui-iconfont">&#xe620;</i> <a href="goods-list.html" title="货物管理"> 货物管理</a></dt>
+		</dl>
+		<dl id="订单管理">
+			<dt><i class="Hui-iconfont">&#xe687;</i> <a href="order-list.html" title="订单管理"> 订单管理</a></dt>
+		</dl>
+		<dl id="menu-map">
+			<dt><i class="Hui-iconfont">&#xe625;</i><a href="shop-list.html" title="门店管理"> 门店管理</a></dt>
+		</dl>
+		<dl id="menu-product">
+			<dt><i class="Hui-iconfont">&#xe681;</i> <a href="	product-category.html" title="分类管理"> 分类管理</a></dt>
+		</dl>
+		<dl id="menu-picPlay">
+			<dt><i class="Hui-iconfont">&#xe681;</i> <a href="picPlay-list.html" title="轮播图管理"> 轮播图管理</a></dt>
+		</dl>
+	</div>
+</aside>
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+<!--/_menu 作为公共模版分离出去-->
+
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 轮播图管理 <span class="c-gray en">&gt;</span> 轮播图列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav> <!--<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>-->
+	<div class="Hui-article">
+		<article class="cl pd-20">
+<!--			<div class="text-c"> 日期范围：-->
+<!--				<input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}'})" id="logmin" class="input-text Wdate" style="width:120px;">-->
+<!--				- -->
+<!--				<input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d'})" id="logmax" class="input-text Wdate" style="width:120px;">-->
+<!--				<input type="text" name="" id="customerName" placeholder=" 用户名" style="width:100px" class="input-text">-->
+<!--				<input type="text" name="" id="phone" placeholder="用户手机号" style="width:100px" class="input-text">-->
+<!--				<input type="text" name="" id="goodsName" placeholder="商品名称" style="width:100px" class="input-text">-->
+<!--				<button name="" id="goodQuery" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜订单</button>-->
+<!--				<button name="" id="export" style="width: 60px;background-color: #00b7ee;border-color: #3bb4f2" class="btn btn-success" type="submit" onclick="exportExcel()">导出</button>-->
+<!--			</div>-->
+<!--			<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r">共有数据：<strong id="totalNum"></strong> 条</span> </div>-->
+			<div class="mt-20">
+				<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper no-footer">
+				<!--mx-->
+				<table class="table table-border table-bordered table-bg table-hover table-sort">
+					<thead>
+						<tr class="text-c">
+							<th width="100">轮播图1</th>
+							<th width="100">轮播图2</th>
+							<th width="100">轮播图3</th>
+							<th width="100">轮播图4</th>
+							<th width="100">轮播图5</th>
+						</tr>
+					</thead>
+					<tbody id="goodTableBody">
+						<tr class="text-c">
+							<th width="100"><img id="picImg1" src="temp/empty.png" class="picPlayImg"><a class="picPlayA" href="#" onclick="updatePic(1)">更换</a><input class="picPlayInput" type="file" id="pic1" hidden></th>
+							<th width="100"><img id="picImg2" src="temp/empty.png" class="picPlayImg"><a class="picPlayA" href="#" onclick="updatePic(2)">更换</a><input class="picPlayInput" type="file" id="pic2" hidden></th>
+							<th width="100"><img id="picImg3" src="temp/empty.png" class="picPlayImg"><a class="picPlayA" href="#" onclick="updatePic(3)">更换</a><input class="picPlayInput" type="file" id="pic3" hidden></th>
+							<th width="100"><img id="picImg4" src="temp/empty.png" class="picPlayImg"><a class="picPlayA" href="#" onclick="updatePic(4)">更换</a><input class="picPlayInput" type="file" id="pic4" hidden></th>
+							<th width="100"><img id="picImg5" src="temp/empty.png" class="picPlayImg"><a class="picPlayA" href="#" onclick="updatePic(5)">更换</a><input class="picPlayInput" type="file" id="pic5" hidden></th>
+						</tr>
+					</tbody>
+				</table>
+<!--					<div class="dataTables_length" id="DataTables_Table_0_length" style="margin-top: 15px"><label style="margin-top: 10px" id="pageSizeShow">显示 <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="" onchange="search()"><option value="5">5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> 条</label></div>-->
+<!--					<div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate"><a class="paginate_button previous disabled" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" id="previous">上一页</a><span></span><a class="paginate_button next disabled" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" id="next">下一页</a></div></div>-->
+<!--			<input hidden/>-->
+			</div>
+			</div>
+		</article>
+	</div>
+</section>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.page.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/jquery/common.js"></script>
+<script type="text/javascript">
+	// var page = 1;
+	// var pages;
+$(function () {
+	//获取所有货物
+	// var pageSize = $("#pageSizeShow").find("option:selected").val();
+	$.post(apiHeader + '/picPlay/getPicPlayList',
+			function (text, status) {
+				if (text.code == 0) {
+					var data = text.data;
+					if(data.length > 0){
+						for(var i=0;i<data.length;i++){
+							if(data[i].picPlayUrl != null && data[i].picPlayUrl != ""){
+								$("#picImg" + data[i].sort).attr("src",apiHeader + data[i].picPlayUrl);
+								$("#picImg" + data[i].sort).attr("value",data[i].id);
+								$("#picImg" + data[i].sort).attr("name",data[i].sort);
+							}
+						}
+					}
+				} else {
+					window.location.href = "login.html";
+				}
+			});
+
+
+	$("#pic1").change(function(){
+		var reader = new FileReader();		//获取一个FileReader类
+		var file = this.files[0];			//获取用户选择的文件
+		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
+		var id = $("#picImg1").attr("value");
+		if(id == undefined){
+			id = "";
+		}
+		reader.onloadend = function(){
+			$("#picImg1").attr("src", reader.result);
+			picOnloadEnd(1,id);
+		};
+
+	});
+
+	$("#pic2").change(function(){
+		var reader = new FileReader();		//获取一个FileReader类
+		var file = this.files[0];			//获取用户选择的文件
+		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
+		var id = $("#picImg2").attr("value");
+		debugger;
+		if(id == undefined){
+			id = "";
+		}
+		reader.onloadend = function(){
+			$("#picImg2").attr("src", reader.result);
+			picOnloadEnd(2,id);
+		};
+	});
+
+	$("#pic3").change(function(){
+		var reader = new FileReader();		//获取一个FileReader类
+		var file = this.files[0];			//获取用户选择的文件
+		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
+		var id = $("#picImg3").attr("value");
+		if(id == undefined){
+			id = "";
+		}
+		reader.onloadend = function(){
+			$("#picImg3").attr("src", reader.result);
+			picOnloadEnd(3,id);
+		};
+	});
+
+	$("#pic4").change(function(){
+		var reader = new FileReader();		//获取一个FileReader类
+		var file = this.files[0];			//获取用户选择的文件
+		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
+		var id = $("#picImg4").attr("value");
+		if(id == undefined){
+			id = "";
+		}
+		reader.onloadend = function(){
+			$("#picImg4").attr("src", reader.result);
+			picOnloadEnd(4,id);
+		};
+	});
+
+	$("#pic5").change(function(){
+		var reader = new FileReader();		//获取一个FileReader类
+		var file = this.files[0];			//获取用户选择的文件
+		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
+		var id = $("#picImg5").attr("value");
+		if(id == undefined){
+			id = "";
+		}
+		reader.onloadend = function(){
+			$("#picImg5").attr("src", reader.result);
+			picOnloadEnd(5,id);
+		};
+	});
+
+});
+
+
+function picOnloadEnd(sort,id){
+	// $("#pic" + i).show();
+	var formData = new FormData();
+	var mydata = $("#pic" + sort)[0].files[0];
+	formData.append("file",mydata);
+	formData.append("sort",sort);
+	formData.append("id",id);
+	$.ajax({
+		contentType:"multipart/form-data",
+		url:apiHeader + "/picPlay/updatePicPlay",
+		type:"POST",
+		data:formData,
+		dataType:"json",
+		async: false,
+		processData: false, // 告诉jQuery不要去处理发送的数据
+		contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+		success: function(result){
+			console.log(result);
+			if(result.code == -1){
+				layer.msg("更换失败");
+			}else{
+				layer.msg("更新成功");
+			}
+		},
+		error: function (result) {
+			layer.msg(result);
+		}
+	});
+
+}
+
+//更换点击  ---> file按钮点击
+function updatePic(sort){
+	var inputName = "#pic" + sort;
+	$(inputName).click();
+}
+
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>
