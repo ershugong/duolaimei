@@ -15,16 +15,17 @@
 .deletePic {
     display: none;
     position: absolute;
-    top: -13px;
-    right: -15px;
-    width: 30px;
-    height: 30px;
+    top: -8px;
+    right: -8px;
+    width: 26px;
+    height: 26px;
     /*display: none;*/
 }
 
 .picPlayImg{
     width: 140px;
     height: 100px;
+    cursor: pointer;
 }
 
 .picPlayInput{
