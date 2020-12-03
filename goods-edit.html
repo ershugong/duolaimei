@@ -85,6 +85,18 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">爆款：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box" id="isGreat">
+					<select name="" class="select">
+						<option value="0" id="isNotGreat">否</option>
+						<option value="1" id="isTheGreat">是</option>
+					</select>
+				</span>
+
+			</div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">折扣价：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="" placeholder="包含两位小数（例子：8.00）" id="discountPrice" name="">
@@ -101,30 +113,17 @@
 			<label class="form-label col-xs-4 col-sm-2">封面上传：</label>
 			<input type="file" name="file" id="file"/>
 			<div><img id="headPic" src="/" alt="" style="width: 220px;height: 143px;margin-top: 15px"/></div>
-<!--			<div class="formControls col-xs-8 col-sm-9">-->
-<!--				<div class="uploader-list-container"> -->
-<!--					<div class="queueList">-->
-<!--						<div id="dndArea1" class="placeholder">-->
-<!--&lt;!&ndash;							<div id="filePicker-21"></div>&ndash;&gt;-->
-<!--&lt;!&ndash;							<p>或将照片拖到这里，单次最多可选300张</p>&ndash;&gt;-->
-<!--						</div>-->
-<!--					</div>-->
-<!--					-->
-<!--&lt;!&ndash;					<div class="statusBar" style="display:none;">&ndash;&gt;-->
-<!--&lt;!&ndash;						<div class="progress"> <span class="text">0%</span> <span class="percentage"></span> </div>&ndash;&gt;-->
-<!--&lt;!&ndash;						<div class="info"></div>&ndash;&gt;-->
-<!--&lt;!&ndash;						<div class="btns">&ndash;&gt;-->
-<!--&lt;!&ndash;							<div id="filePicker2"></div>&ndash;&gt;-->
-<!--&lt;!&ndash;							<div class="uploadBtn">开始上传</div>&ndash;&gt;-->
-<!--&lt;!&ndash;						</div>&ndash;&gt;-->
-<!--&lt;!&ndash;					</div>&ndash;&gt;-->
-<!--				</div>-->
-<!--			</div>-->
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">货物详情图片上传：</label>
-			<input type="file" name="file" id="fileContent" multiple = "multiple"/>
-			<div id="multiplePic"></div>
+<!--			<input type="file" name="file" id="fileContent" multiple = "multiple"/>-->
+			<div id="multiplePic">
+				<div style="float: left"><div class="imgDiv"><img id="picImg1" src="temp/empty.png" class="picPlayImg"><a onclick='deletePic(1)'><img id="deletePic1" src="temp/delete.png" class='deletePic'/></a></div><a class="picPlayA" href="#" onclick="updatePic(1)" style="margin-left: 50px">更换</a><input class="picPlayInput" type="file" id="pic1" hidden></div>
+				<div style="float: left;margin-left: 10px"><div class="imgDiv"><img id="picImg2" src="temp/empty.png" class="picPlayImg"><a onclick='deletePic(2)'><img id="deletePic2" src="temp/delete.png" class='deletePic'/></a></div><a class="picPlayA" href="#" onclick="updatePic(2)" style="margin-left: 50px">更换</a><input class="picPlayInput" type="file" id="pic2" hidden></div>
+				<div style="float: left;margin-left: 10px"><div class="imgDiv"><img id="picImg3" src="temp/empty.png" class="picPlayImg"><a onclick='deletePic(3)'><img id="deletePic3" src="temp/delete.png" class='deletePic'/></a></div><a class="picPlayA" href="#" onclick="updatePic(3)" style="margin-left: 50px">更换</a><input class="picPlayInput" type="file" id="pic3" hidden></div>
+				<div style="float: left;margin-left: 10px"><div class="imgDiv"><img id="picImg4" src="temp/empty.png" class="picPlayImg"><a onclick='deletePic(4)'><img id="deletePic4" src="temp/delete.png" class='deletePic'/></a></div><a class="picPlayA" href="#" onclick="updatePic(4)" style="margin-left: 50px">更换</a><input class="picPlayInput" type="file" id="pic4" hidden></div>
+				<div style="float: left;margin-left: 10px"><div class="imgDiv"><img id="picImg5" src="temp/empty.png" class="picPlayImg"><a onclick='deletePic(5)'><img id="deletePic5" src="temp/delete.png" class='deletePic'/></a></div><a class="picPlayA" href="#" onclick="updatePic(5)" style="margin-left: 50px">更换</a><input class="picPlayInput" type="file" id="pic5" hidden></div>
+			</div>
 		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
@@ -155,6 +154,7 @@
 <script type="text/javascript">
 var picClassIndex = 0;
 var map = new Map();
+var id = "";
 $(function(){
 	//初始化，分类的下拉框
 	// http://localhost:8080/goods/insertGoods
@@ -176,7 +176,7 @@ $(function(){
 	});
 
 
-	var id = request("id");
+	id = request("id");
 	$.post(apiHeader + "/goods/goodsDetail",{id:id},function (result) {
 		if(result.code == 0){
 			var data = result.data;
@@ -190,6 +190,11 @@ $(function(){
 			$("#headPic").attr("src", apiHeader+data.headPic);
 			$("#classifySelect").val(data.classifyId);
 			$("#unit").val(data.unit);
+			if(data.isGreat == 1){
+				$("#isTheGreat").attr('selected','true');
+			}else{
+				$("#isNotGreat").attr('selected','true');
+			}
 			// debugger;
 			map = new Map();
 			var contentFiles = data.fileContent;
@@ -199,6 +204,7 @@ $(function(){
 				//遍历图片对象，生成加载方法，放入map中
 				for(var j=0;j<contentFileArray.length;j++){
 					if(j == 0){
+						$("#picImg1").attr("src",apiHeader + contentFileArray[j]);
 						var image = new Image();
 						image.crossOrigin = '';
 						image.src = apiHeader + contentFileArray[j];
@@ -206,12 +212,14 @@ $(function(){
 						image.onload = function(){
 							let blob = convertBase64UrlToBlob(getBase64Image(image));
 							let file =  new window.File([blob], fileName,{type:"image/jpg"});
-							map.set(0,file);
+							map.set(1,file);
+							picOnloadEndInMap(1);
 							tempIndexNum = tempIndexNum + 1;
 						};
 					}
 
 					if(j == 1){
+						$("#picImg2").attr("src",apiHeader + contentFileArray[j]);
 						var image1 = new Image();
 						image1.crossOrigin = '';
 						image1.src = apiHeader + contentFileArray[j];
@@ -219,12 +227,14 @@ $(function(){
 						image1.onload = function(){
 							let blob = convertBase64UrlToBlob(getBase64Image(image1));
 							let file =  new window.File([blob], fileName1,{type:"image/jpg"});
-							map.set(1,file);
+							map.set(2,file);
+							picOnloadEndInMap(2);
 							tempIndexNum = tempIndexNum + 1;
 						};
 					}
 
 					if(j == 2){
+						$("#picImg3").attr("src",apiHeader + contentFileArray[j]);
 						var image2 = new Image();
 						image2.crossOrigin = '';
 						image2.src = apiHeader + contentFileArray[j];
@@ -232,12 +242,14 @@ $(function(){
 						image2.onload = function(){
 							let blob = convertBase64UrlToBlob(getBase64Image(image2));
 							let file =  new window.File([blob], fileName2,{type:"image/jpg"});
-							map.set(2,file);
+							map.set(3,file);
+							picOnloadEndInMap(3);
 							tempIndexNum = tempIndexNum + 1;
 						};
 					}
 
 					if(j == 3){
+						$("#picImg4").attr("src",apiHeader + contentFileArray[j]);
 						var image3 = new Image();
 						image3.crossOrigin = '';
 						image3.src = apiHeader + contentFileArray[j];
@@ -245,12 +257,14 @@ $(function(){
 						image3.onload = function(){
 							let blob = convertBase64UrlToBlob(getBase64Image(image3));
 							let file =  new window.File([blob], fileName3,{type:"image/jpg"});
-							map.set(3,file);
+							map.set(4,file);
+							picOnloadEndInMap(4);
 							tempIndexNum = tempIndexNum + 1;
 						};
 					}
 
 					if(j == 4){
+						$("#picImg5").attr("src",apiHeader + contentFileArray[j]);
 						var image4 = new Image();
 						image4.crossOrigin = '';
 						image4.src = apiHeader + contentFileArray[j];
@@ -258,32 +272,109 @@ $(function(){
 						image4.onload = function(){
 							let blob = convertBase64UrlToBlob(getBase64Image(image4));
 							let file =  new window.File([blob], fileName4,{type:"image/jpg"});
-							map.set(4,file);
+							map.set(5,file);
+							picOnloadEndInMap(5);
 							tempIndexNum = tempIndexNum + 1;
 						};
 					}
 				}
 
-				for(var i=0;i<contentFileArray.length;i++){
-					var tempIndex = picClassIndex;
-					var className = "imgDiv" + tempIndex;
-					$("#multiplePic").append("<div class='"+className+"' style='display: inline-block; position: relative;' ></div>");
-					$("."+className+"").append("<img src=\"" + apiHeader + contentFileArray[i] + "\" alt=\"\" style=\"width: 160px;height: 120px;margin-top: 15px;margin-left: 5px\"/>");
-					$("."+className+"").append("<a onclick='deletePic("+tempIndex+")'><img src=\"temp/delete.png\" class='delete'/></a>");
-
-					// picMap.set(fileName,image);
-
-					//let file =  new window.File([blob], contentFileArray[i].split("/")[2]);
-					picClassIndex = picClassIndex + 1;
-				}
-
-				console.log(map);
+				// for(var i=0;i<contentFileArray.length;i++){
+				// 	var tempIndex = picClassIndex;
+				// 	var className = "imgDiv" + tempIndex;
+				// 	$("#multiplePic").append("<div class='"+className+"' style='display: inline-block; position: relative;' ></div>");
+				// 	$("."+className+"").append("<img src=\"" + apiHeader + contentFileArray[i] + "\" alt=\"\" style=\"width: 160px;height: 120px;margin-top: 15px;margin-left: 5px\"/>");
+				// 	$("."+className+"").append("<a onclick='deletePic("+tempIndex+")'><img src=\"temp/delete.png\" class='delete'/></a>");
+				//
+				// 	// picMap.set(fileName,image);
+				//
+				// 	//let file =  new window.File([blob], contentFileArray[i].split("/")[2]);
+				// 	picClassIndex = picClassIndex + 1;
+				// }
+				//
+				// console.log(map);
 			}
 		}else{
 			layer.msg(result.message);
 		}
 	});
 
+
+	$("#pic1").change(function(){
+		var reader = new FileReader();		//获取一个FileReader类
+		var file = this.files[0];			//获取用户选择的文件
+		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
+		// var id = $("#picImg1").attr("value");
+		// if(id == undefined){
+		// 	id = "";
+		// }
+		map.set(1,file);
+		reader.onloadend = function(){
+			$("#picImg1").attr("src", reader.result);
+			picOnloadEndInMap(1,reader.result);
+		};
+
+	});
+
+	$("#pic2").change(function(){
+		var reader = new FileReader();		//获取一个FileReader类
+		var file = this.files[0];			//获取用户选择的文件
+		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
+		// var id = $("#picImg2").attr("value");
+		// if(id == undefined){
+		// 	id = "";
+		// }
+		map.set(2,file);
+		reader.onloadend = function(){
+			$("#picImg2").attr("src", reader.result);
+			picOnloadEndInMap(2,reader.result);
+		};
+	});
+
+	$("#pic3").change(function(){
+		var reader = new FileReader();		//获取一个FileReader类
+		var file = this.files[0];			//获取用户选择的文件
+		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
+		// var id = $("#picImg3").attr("value");
+		// if(id == undefined){
+		// 	id = "";
+		// }
+		map.set(3,file);
+		reader.onloadend = function(){
+			$("#picImg3").attr("src", reader.result);
+			picOnloadEndInMap(3,reader.result);
+		};
+	});
+
+	$("#pic4").change(function(){
+		var reader = new FileReader();		//获取一个FileReader类
+		var file = this.files[0];			//获取用户选择的文件
+		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
+		// var id = $("#picImg4").attr("value");
+		// if(id == undefined){
+		// 	id = "";
+		// }
+		map.set(4,file);
+		reader.onloadend = function(){
+			$("#picImg4").attr("src", reader.result);
+			picOnloadEndInMap(4,reader.result);
+		};
+	});
+
+	$("#pic5").change(function(){
+		var reader = new FileReader();		//获取一个FileReader类
+		var file = this.files[0];			//获取用户选择的文件
+		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
+		// var id = $("#picImg5").attr("value");
+		// if(id == undefined){
+		// 	id = "";
+		// }
+		map.set(5,file);
+		reader.onloadend = function(){
+			$("#picImg5").attr("src", reader.result);
+			picOnloadEndInMap(5,reader.result);
+		};
+	});
 
 
 	//图片预览
@@ -493,14 +584,28 @@ function sortMap(map, isKeyUpSort) {
 };
 
 function deletePic(num) {
-	var className = ".imgDiv" + num;
+/*	var className = ".imgDiv" + num;
 	map.delete(num);
-	$(className).html("");
+	$(className).html("");*/
+	map.delete(num);
+	$("#picImg" + num).attr("src","temp/empty.png");
+	$("#deletePic" + num).hide();
+}
+
+//把图片流放入map中
+function picOnloadEndInMap(index,readerResult) {
+	$("#deletePic" + index).show();
+	// map.set(index,file);
+}
+
+//更换点击  ---> file按钮点击
+function updatePic(sort){
+	var inputName = "#pic" + sort;
+	$(inputName).click();
 }
 
 //获取保存/上架
 function submitGoods(type) {
-	var id = request("id");
 	var mydata = $("#file")[0].files[0];
 	var formData = new FormData();
 	if($("#goodsName").val() == ''){
@@ -528,8 +633,9 @@ function submitGoods(type) {
 	formData.append("status",type);
 	formData.append("id",id);
 	formData.append("unit",$("#unit").val());
+	var isGreat = Number($("#isGreat").find("option:selected").val());
+	formData.append("isGreat",isGreat);
 
-	debugger;
 	if(map.size > 0){
 		map = sortMap(map,true);
 		for(let key of map.keys()){

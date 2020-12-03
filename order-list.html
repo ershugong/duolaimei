@@ -30,7 +30,7 @@
 <!--_header 作为公共模版分离出去-->
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="index.html">陆宝管理后台</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#"></a>
+		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="index.html">多来美管理后台</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#"></a>
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
 					<li>超级管理员</li>
@@ -67,9 +67,9 @@
 		<dl id="订单管理">
 			<dt><i class="Hui-iconfont">&#xe687;</i> <a href="order-list.html" title="订单管理"> 订单管理</a></dt>
 		</dl>
-		<dl id="menu-map">
-			<dt><i class="Hui-iconfont">&#xe625;</i><a href="shop-list.html" title="门店管理"> 门店管理</a></dt>
-		</dl>
+<!--		<dl id="menu-map">-->
+<!--			<dt><i class="Hui-iconfont">&#xe625;</i><a href="shop-list.html" title="门店管理"> 门店管理</a></dt>-->
+<!--		</dl>-->
 		<dl id="menu-product">
 			<dt><i class="Hui-iconfont">&#xe681;</i> <a href="	product-category.html" title="分类管理"> 分类管理</a></dt>
 		</dl>
@@ -110,6 +110,7 @@
 							<th width="60">下单金额</th>
 							<th width="80">货物详情</th>
 							<th width="40">订单创建时间</th>
+							<th width="100">门店名称</th>
 							<th width="100">收货地址</th>
 							<th width="60">联系人名称</th>
 						</tr>
@@ -117,7 +118,7 @@
 					<tbody id="goodTableBody">
 					</tbody>
 				</table>
-					<div class="dataTables_length" id="DataTables_Table_0_length" style="margin-top: 15px"><label style="margin-top: 10px" id="pageSizeShow">显示 <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="" onchange="search()"><option value="5">5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> 条</label></div>
+					<div class="dataTables_length" id="DataTables_Table_0_length" style="margin-top: 15px"><label style="margin-top: 10px" id="pageSizeShow">显示 <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="" onchange="search()"><option value="30">30</option><option value="100">100</option><option value="200">200</option></select> 条</label></div>
 					<div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate"><a class="paginate_button previous disabled" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" id="previous">上一页</a><span></span><a class="paginate_button next disabled" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" id="next">下一页</a></div></div>
 			<input hidden/>
 			</div>
@@ -162,11 +163,18 @@ $(function () {
 							}
 							mystr = mystr + "<td>"+dataArray[i].goodsNum+"</td>";
 							mystr = mystr + "<td>"+dataArray[i].unit+"</td>";
-							var totalPrice = dataArray[i].price * dataArray[i].goodsNum;
+							var price = 0;
+							if(dataArray[i].discountPrice == null){
+								price = dataArray[i].price;
+							}else{
+								price = dataArray[i].discountPrice;
+							}
+							var totalPrice = price * dataArray[i].goodsNum;
 							mystr = mystr + "<td>"+totalPrice+"</td>";
 							var content = dataArray[i].content;//.replaceAll(",","<br/>");
 							mystr = mystr + "<td>"+content+"</td>";
 							mystr = mystr + "<td>"+dataArray[i].createTime+"</td>";
+							mystr = mystr + "<td>"+dataArray[i].shopName+"</td>";
 							mystr = mystr + "<td>"+dataArray[i].address+"</td>";
 							mystr = mystr + "<td>"+dataArray[i].customerName+"</td>";
 							mystr = mystr + "</tr>";
@@ -249,11 +257,18 @@ function queryGoodsList(name,startTime,endTime,page,pageSize,phone,goodsName,cus
 						}
 						mystr = mystr + "<td>"+dataArray[i].goodsNum+"</td>";
 						mystr = mystr + "<td>"+dataArray[i].unit+"</td>";
-						var totalPrice = dataArray[i].price * dataArray[i].goodsNum;
+						var price = 0;
+						if(dataArray[i].discountPrice == null){
+							price = dataArray[i].price;
+						}else{
+							price = dataArray[i].discountPrice;
+						}
+						var totalPrice = price * dataArray[i].goodsNum;
 						mystr = mystr + "<td>"+totalPrice+"</td>";
 						var content = dataArray[i].content;//.replaceAll(",","<br/>");
 						mystr = mystr + "<td>"+content+"</td>";
 						mystr = mystr + "<td>"+dataArray[i].createTime+"</td>";
+						mystr = mystr + "<td>"+dataArray[i].shopName+"</td>";
 						mystr = mystr + "<td>"+dataArray[i].address+"</td>";
 						mystr = mystr + "<td>"+dataArray[i].customerName+"</td>";
 						mystr = mystr + "</tr>";

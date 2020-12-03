@@ -12,6 +12,16 @@
     /*display: none;*/
 }
 
+.deletePic {
+    display: none;
+    position: absolute;
+    top: -13px;
+    right: -15px;
+    width: 30px;
+    height: 30px;
+    /*display: none;*/
+}
+
 .picPlayImg{
     width: 140px;
     height: 100px;
@@ -24,4 +34,18 @@
 .picPlayA{
     margin-top: 10px;
     display: block;
+}
+
+.fileBtn{
+    width: 75px;
+    height: 25px;
+    border: 1px solid #23c6c8;
+    background-color: #23c6c8;
+    color: #fff;
+    border-radius: 3px;
+}
+
+.btn:hover{
+    border: 1px solid #47bc9e;
+    background-color: #47bc9e;
 }

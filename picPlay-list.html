@@ -32,7 +32,7 @@
 <!--_header 作为公共模版分离出去-->
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="index.html">陆宝管理后台</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#"></a>
+		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="index.html">多来美管理后台</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#"></a>
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
 					<li>超级管理员</li>
@@ -69,9 +69,9 @@
 		<dl id="订单管理">
 			<dt><i class="Hui-iconfont">&#xe687;</i> <a href="order-list.html" title="订单管理"> 订单管理</a></dt>
 		</dl>
-		<dl id="menu-map">
-			<dt><i class="Hui-iconfont">&#xe625;</i><a href="shop-list.html" title="门店管理"> 门店管理</a></dt>
-		</dl>
+<!--		<dl id="menu-map">-->
+<!--			<dt><i class="Hui-iconfont">&#xe625;</i><a href="shop-list.html" title="门店管理"> 门店管理</a></dt>-->
+<!--		</dl>-->
 		<dl id="menu-product">
 			<dt><i class="Hui-iconfont">&#xe681;</i> <a href="	product-category.html" title="分类管理"> 分类管理</a></dt>
 		</dl>
@@ -113,11 +113,11 @@
 					</thead>
 					<tbody id="goodTableBody">
 						<tr class="text-c">
-							<th width="100"><img id="picImg1" src="temp/empty.png" class="picPlayImg"><a class="picPlayA" href="#" onclick="updatePic(1)">更换</a><input class="picPlayInput" type="file" id="pic1" hidden></th>
-							<th width="100"><img id="picImg2" src="temp/empty.png" class="picPlayImg"><a class="picPlayA" href="#" onclick="updatePic(2)">更换</a><input class="picPlayInput" type="file" id="pic2" hidden></th>
-							<th width="100"><img id="picImg3" src="temp/empty.png" class="picPlayImg"><a class="picPlayA" href="#" onclick="updatePic(3)">更换</a><input class="picPlayInput" type="file" id="pic3" hidden></th>
-							<th width="100"><img id="picImg4" src="temp/empty.png" class="picPlayImg"><a class="picPlayA" href="#" onclick="updatePic(4)">更换</a><input class="picPlayInput" type="file" id="pic4" hidden></th>
-							<th width="100"><img id="picImg5" src="temp/empty.png" class="picPlayImg"><a class="picPlayA" href="#" onclick="updatePic(5)">更换</a><input class="picPlayInput" type="file" id="pic5" hidden></th>
+							<th width="100"><div class="imgDiv"><img id="picImg1" src="temp/empty.png" class="picPlayImg"><a onclick='deletePic(1)'><img id="deletePic1" src="temp/delete.png" class='deletePic'/></a></div><a class="picPlayA" href="#" onclick="updatePic(1)">更换</a><input class="picPlayInput" type="file" id="pic1" hidden></th>
+							<th width="100"><div class="imgDiv"><img id="picImg2" src="temp/empty.png" class="picPlayImg"><a onclick='deletePic(2)'><img id="deletePic2" src="temp/delete.png" class='deletePic'/></a></div><a class="picPlayA" href="#" onclick="updatePic(2)">更换</a><input class="picPlayInput" type="file" id="pic2" hidden></th>
+							<th width="100"><div class="imgDiv"><img id="picImg3" src="temp/empty.png" class="picPlayImg"><a onclick='deletePic(3)'><img id="deletePic3" src="temp/delete.png" class='deletePic'/></a></div><a class="picPlayA" href="#" onclick="updatePic(3)">更换</a><input class="picPlayInput" type="file" id="pic3" hidden></th>
+							<th width="100"><div class="imgDiv"><img id="picImg4" src="temp/empty.png" class="picPlayImg"><a onclick='deletePic(4)'><img id="deletePic4" src="temp/delete.png" class='deletePic'/></a></div><a class="picPlayA" href="#" onclick="updatePic(4)">更换</a><input class="picPlayInput" type="file" id="pic4" hidden></th>
+							<th width="100"><div class="imgDiv"><img id="picImg5" src="temp/empty.png" class="picPlayImg"><a onclick='deletePic(5)'><img id="deletePic5" src="temp/delete.png" class='deletePic'/></a></div><a class="picPlayA" href="#" onclick="updatePic(5)">更换</a><input class="picPlayInput" type="file" id="pic5" hidden></th>
 						</tr>
 					</tbody>
 				</table>
@@ -158,6 +158,9 @@ $(function () {
 								$("#picImg" + data[i].sort).attr("src",apiHeader + data[i].picPlayUrl);
 								$("#picImg" + data[i].sort).attr("value",data[i].id);
 								$("#picImg" + data[i].sort).attr("name",data[i].sort);
+
+								//添加删除图片
+								$("#deletePic" + data[i].sort).show();
 							}
 						}
 					}
@@ -178,6 +181,7 @@ $(function () {
 		reader.onloadend = function(){
 			$("#picImg1").attr("src", reader.result);
 			picOnloadEnd(1,id);
+			$("#pic1").val("");
 		};
 
 	});
@@ -187,13 +191,13 @@ $(function () {
 		var file = this.files[0];			//获取用户选择的文件
 		reader.readAsDataURL(file);			//开始读取指定Blob（二进制文件）中的内容。一旦完成，立即触发 loadend 事件，并且该对象的 result 属性中将包含一个 data: URL 格式的字符串以表示所读取文件的内容。
 		var id = $("#picImg2").attr("value");
-		debugger;
 		if(id == undefined){
 			id = "";
 		}
 		reader.onloadend = function(){
 			$("#picImg2").attr("src", reader.result);
 			picOnloadEnd(2,id);
+			$("#pic2").val("");
 		};
 	});
 
@@ -208,6 +212,7 @@ $(function () {
 		reader.onloadend = function(){
 			$("#picImg3").attr("src", reader.result);
 			picOnloadEnd(3,id);
+			$("#pic3").val("");
 		};
 	});
 
@@ -222,6 +227,7 @@ $(function () {
 		reader.onloadend = function(){
 			$("#picImg4").attr("src", reader.result);
 			picOnloadEnd(4,id);
+			$("#pic4").val("");
 		};
 	});
 
@@ -236,10 +242,26 @@ $(function () {
 		reader.onloadend = function(){
 			$("#picImg5").attr("src", reader.result);
 			picOnloadEnd(5,id);
+			$("#pic5").val("");
 		};
 	});
 
 });
+
+//删除轮播图
+function deletePic(sort){
+	$.post(apiHeader + "/picPlay/deletePicPlayBySort", {sort: sort}, function(result){
+			if (result.code == 0){
+				$("#picImg" + sort).attr("src","temp/empty.png");
+				$("#deletePic" + sort).hide();
+				$("#picImg" + sort).val("");
+				layer.msg("删除成功");
+			}else{
+				layer.msg("删除失败");
+			}
+		}
+	);
+}
 
 
 function picOnloadEnd(sort,id){
@@ -263,6 +285,7 @@ function picOnloadEnd(sort,id){
 			if(result.code == -1){
 				layer.msg("更换失败");
 			}else{
+				$("#deletePic" + sort).show();
 				layer.msg("更新成功");
 			}
 		},
