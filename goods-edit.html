@@ -636,6 +636,7 @@ function submitGoods(type) {
 	var isGreat = Number($("#isGreat").find("option:selected").val());
 	formData.append("isGreat",isGreat);
 
+
 	if(map.size > 0){
 		map = sortMap(map,true);
 		for(let key of map.keys()){
