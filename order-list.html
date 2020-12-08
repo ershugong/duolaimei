@@ -104,10 +104,11 @@
 						<tr class="text-c">
 							<th width="80">手机号</th>
 							<th width="100">商品名称</th>
-							<th width="60">商品单价</th>
-							<th width="60">下单数量</th>
-							<th width="60">数量单位</th>
-							<th width="60">下单金额</th>
+							<th width="100">标签名称</th>
+							<th width="40">商品单价</th>
+							<th width="40">下单数量</th>
+							<th width="40">数量单位</th>
+							<th width="40">下单金额</th>
 							<th width="80">货物详情</th>
 							<th width="40">订单创建时间</th>
 							<th width="100">门店名称</th>
@@ -156,6 +157,7 @@ $(function () {
 							mystr = mystr + "<tr class='text-c'>";
 							mystr = mystr + "<td>"+dataArray[i].customerPhone+"</td>";
 							mystr = mystr + "<td>"+dataArray[i].goodsName+"</td>";
+							mystr = mystr + "<td>"+dataArray[i].optionTitle+"</td>";
 							if(dataArray[i].discountPrice == null){
 								mystr = mystr + "<td>"+dataArray[i].price+"</td>";
 							}else{

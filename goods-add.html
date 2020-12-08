@@ -58,24 +58,24 @@
 				</span>
 			</div>
 		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>数量：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="number" class="input-text" value="0" placeholder="" id="num" name="">
-			</div>
-		</div>
+<!--		<div class="row cl">-->
+<!--			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>数量：</label>-->
+<!--			<div class="formControls col-xs-8 col-sm-9">-->
+<!--				<input type="number" class="input-text" value="0" placeholder="" id="num" name="">-->
+<!--			</div>-->
+<!--		</div>-->
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>单位：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" style="width: 80px" class="input-text" value="个" placeholder="" id="unit" name="">
 			</div>
 		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>单价：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="包含两位小数（例子：9.00）" id="price" name="">
-			</div>
-		</div>
+<!--		<div class="row cl">-->
+<!--			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>单价：</label>-->
+<!--			<div class="formControls col-xs-8 col-sm-9">-->
+<!--				<input type="text" class="input-text" value="" placeholder="包含两位小数（例子：9.00）" id="price" name="">-->
+<!--			</div>-->
+<!--		</div>-->
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">活动：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -95,11 +95,43 @@
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2">折扣价：</label>
+			<label class="form-label col-xs-4 col-sm-2">类型选项：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="包含两位小数（例子：8.00）" id="discountPrice" name="">
+				<input type="text" class="input-text" value="" placeholder="选项标题" id="optionText" name="" style="width: 200px">
+				<input type="text" class="input-text" value="" placeholder="价格，例子: 4.00" id="optionPrice" name="" style="width: 150px">
+				<input type="text" class="input-text" value="" placeholder="折扣价，例子: 3.00" id="optionDiscountPrice" name="" style="width: 150px">
+				<input type="text" class="input-text" value="" placeholder="库存" id="optionNum" name="" style="width: 100px">
+				<button onClick="addOption(1)" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 添加</button>
+			</div>
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2" id="goodsOption" style="margin-top: 15px">
 			</div>
 		</div>
+		<div class="row cl" style="display: none">
+			<label class="form-label col-xs-4 col-sm-2">二层类型选项：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="选项标题" id="optionText2" name="" style="width: 200px">
+				<input type="text" class="input-text" value="" placeholder="价格变动" id="optionPrice2" name="" style="width: 100px">
+				<button onClick="addOption(2)" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 添加</button>
+			</div>
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2" id="goodsOption2" style="margin-top: 15px">
+			</div>
+		</div>
+		<div class="row cl" style="display: none">
+			<label class="form-label col-xs-4 col-sm-2">三层类型选项：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="选项标题" id="optionText3" name="" style="width: 200px">
+				<input type="text" class="input-text" value="" placeholder="价格变动" id="optionPrice3" name="" style="width: 100px">
+				<button onClick="addOption(3)" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 添加</button>
+			</div>
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2" id="goodsOption3" style="margin-top: 15px">
+			</div>
+		</div>
+<!--		<div class="row cl">-->
+<!--			<label class="form-label col-xs-4 col-sm-2">折扣价：</label>-->
+<!--			<div class="formControls col-xs-8 col-sm-9">-->
+<!--				<input type="text" class="input-text" value="" placeholder="包含两位小数（例子：8.00）" id="discountPrice" name="">-->
+<!--			</div>-->
+<!--		</div>-->
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">货物详情：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -175,6 +207,9 @@
 var contentPic = new Array();
 var map = new Map();
 var picClassIndex = 0;
+var optionMap = new Map();
+var optionPriceMap = new Map();
+var optionMapIndex = 1;
 $(function(){
 	//初始化，分类的下拉框
 	// http://localhost:8080/goods/insertGoods
@@ -447,6 +482,40 @@ $(function(){
 
 });
 
+//删除自定义选项
+function delOption(e,level,index) {
+	e.style.display = "none";
+	var levelKey = "level" + level + "_" + index;
+	optionMap.delete(levelKey);
+	// optionPriceMap.delete(levelKey);
+}
+
+//添加自定义选项
+function addOption(level){
+	var levelKey = "level" + level + "_" + optionMapIndex;
+	var optionText = $("#optionText").val();
+	var optionPrice = $("#optionPrice").val();
+	if(optionPrice == ''){
+		layer.msg("请输出标签单价");
+		return;
+	}
+	var optionDiscountPrice = $("#optionDiscountPrice").val();
+	var optionNum = $("#optionNum").val();
+	if(optionNum == ''){
+		layer.msg("请输出标签数量");
+		return;
+	}
+	var option = {level:level,title:optionText, price:parseFloat(optionPrice).toFixed(2), discountPrice:parseFloat(optionDiscountPrice).toFixed(2), num:Number(optionNum)};
+	optionMap.set(levelKey,option);
+	// optionPriceMap.set(levelKey,optionPrice);
+	$("#goodsOption").append("<button onclick='delOption(this,"+level+","+optionMapIndex+")' class=\"btn btn-secondary radius\" type=\"button\" style='margin-right: 5px;margin-bottom: 3px'><i class=\"Hui-iconfont\">&#xe632;</i> "+optionText + " |￥" + optionPrice + " |￥" + optionDiscountPrice + " |" + optionNum +"</button>");
+	optionMapIndex = optionMapIndex + 1;
+	$("#optionText").val("");
+	$("#optionPrice").val("");
+	$("#optionDiscountPrice").val("");
+	$("#optionNum").val("");
+}
+
 //把图片流放入map中
 function picOnloadEndInMap(index,readerResult) {
 	$("#deletePic" + index).show();
@@ -514,11 +583,32 @@ function submitGoods(type) {
 		};
 	}
 
+	if(optionMap.size > 0){
+		// JSON.parse(jsonstr); //可以将json字符串转换成json对象
+		// JSON.stringify(jsonobj); //可以将json对象转换成json对符串
+		var tempArray = new Array();
+		for(let key of optionMap.keys()){
+			tempArray.push(optionMap.get(key));
+		};
+		formData.append("optionArray",JSON.stringify(tempArray));
+	}else{
+		layer.msg("请添加至少一个类型选项")
+	}
+
+
+	// if(optionPriceMap.size > 0){
+	// 	for(let key of optionPriceMap.keys()){
+	// 		formData.append("optionPriceArray",optionPriceMap.get(key) * 1);
+	// 	};
+	// }else{
+	// 	layer.msg("请添加至少一个类型选项")
+	// }
+
 	formData.append("file", mydata);
 	formData.append("name",$("#goodsName").val());
-	formData.append("num",$("#num").val());
-	formData.append("discountPrice",$("#discountPrice").val());
-	formData.append("price",$("#price").val());
+	// formData.append("num",$("#num").val());
+	// formData.append("discountPrice",$("#discountPrice").val());
+	// formData.append("price",$("#price").val());
 	formData.append("activity",$("#activity").val());
 	formData.append("classifyId",$("#classifyList").find("option:selected").val());
 	formData.append("classifyName",$("#classifyList").find("option:selected").text());
@@ -546,10 +636,10 @@ function submitGoods(type) {
 		contentType: false, // 告诉jQuery不要去设置Content-Type请求头
 		success: function(result){
 			console.log(result);
-			if(result.code == -1){
-				layer.msg(result.message);
-			}else{
+			if(result.code == 0){
 				layer.msg("添加成功");
+			}else{
+				layer.msg(result.message);
 			}
 
 		},
