@@ -813,6 +813,18 @@ function addOption(level){
 	var optionPrice = $("#optionPrice").val();
 	var optionDiscountPrice = $("#optionDiscountPrice").val();
 	var optionNum = $("#optionNum").val();
+	if(optionText == ''){
+		layer.msg("请输入标签名称");
+		return;
+	}
+	if(optionPrice == ''){
+		layer.msg("请输入标签单价");
+		return;
+	}
+	if(optionNum == ''){
+		layer.msg("请输入标签数量");
+		return;
+	}
 	var optionId = "";
 	$.post(apiHeader + "/goodsOption/insertOptionDetail",{level:level,title:optionText,price:optionPrice,discountPrice: optionDiscountPrice,num: optionNum,goodsId: id},function (result) {
 		if(result.code == 0){

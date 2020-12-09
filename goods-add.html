@@ -495,14 +495,18 @@ function addOption(level){
 	var levelKey = "level" + level + "_" + optionMapIndex;
 	var optionText = $("#optionText").val();
 	var optionPrice = $("#optionPrice").val();
+	if(optionText == ''){
+		layer.msg("请输入标签名称");
+		return;
+	}
 	if(optionPrice == ''){
-		layer.msg("请输出标签单价");
+		layer.msg("请输入标签单价");
 		return;
 	}
 	var optionDiscountPrice = $("#optionDiscountPrice").val();
 	var optionNum = $("#optionNum").val();
 	if(optionNum == ''){
-		layer.msg("请输出标签数量");
+		layer.msg("请输入标签数量");
 		return;
 	}
 	var option = {level:level,title:optionText, price:parseFloat(optionPrice).toFixed(2), discountPrice:parseFloat(optionDiscountPrice).toFixed(2), num:Number(optionNum)};
