@@ -7,11 +7,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <!--<meta http-equiv="Access-Control-Allow-Origin" content="*" />-->
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--<meta http-equiv="Cache-Control" content="no-siteapp" />-->
+<meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+<meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+<meta HTTP-EQUIV="expires" CONTENT="0">
 <link rel="Bookmark" href="favicon.ico" >
 <link rel="Shortcut Icon" href="favicon.ico" />
 <!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/jquery/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
 <![endif]-->
 <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
@@ -21,7 +25,9 @@
 <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
 <link rel="stylesheet" type="text/css" href="static/personal/picture.css" />
-<!--[if IE 6]>
+	<link rel="stylesheet" type="text/css" href="static/personal/bootstrap-datetimepicker.min.css" />
+
+	<!--[if IE 6]>
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script><![endif]-->
 <!--/meta 作为公共模版分离出去-->
@@ -95,12 +101,19 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">限购时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input style="width: 200px" type="text" class="input-text" value="" id="datetimepicker">
+			</div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">类型选项：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="" placeholder="选项标题" id="optionText" name="" style="width: 200px">
 				<input type="text" class="input-text" value="" placeholder="价格，例子: 4.00" id="optionPrice" name="" style="width: 150px">
 				<input type="text" class="input-text" value="" placeholder="折扣价，例子: 3.00" id="optionDiscountPrice" name="" style="width: 150px">
 				<input type="text" class="input-text" value="" placeholder="库存" id="optionNum" name="" style="width: 100px">
+				<input type="text" class="input-text" value="" placeholder="限购量" id="optionPersonBuyLimit" name="" style="width: 100px">
 				<button onClick="addOption(1)" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 添加</button>
 			</div>
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2" id="goodsOption" style="margin-top: 15px">
@@ -229,6 +242,19 @@ $(function(){
 			window.location.href = "login.html";
 			// layer.msg(text.message);
 		}
+	});
+
+	//限时购物的时间选择器
+	$("#datetimepicker").datetimepicker({
+		format: "yyyy-mm-dd hh:ii:00",
+		language: "zh-CN",
+		autoclose: true,
+		minView: "hour",
+		maxView: "decade",
+		todayBtn: "linked",
+		pickerPosition: "bottom-left"
+	}).on("click",function(){
+		$("#datetimepicker").datetimepicker("setEndDate",$("#datetimepicker").value());
 	});
 
 	//文本数量监听
@@ -495,6 +521,7 @@ function addOption(level){
 	var levelKey = "level" + level + "_" + optionMapIndex;
 	var optionText = $("#optionText").val();
 	var optionPrice = $("#optionPrice").val();
+	var optionPersonBuyLimit = $("#optionPersonBuyLimit").val();
 	if(optionText == ''){
 		layer.msg("请输入标签名称");
 		return;
@@ -509,15 +536,25 @@ function addOption(level){
 		layer.msg("请输入标签数量");
 		return;
 	}
-	var option = {level:level,title:optionText, price:parseFloat(optionPrice).toFixed(2), discountPrice:parseFloat(optionDiscountPrice).toFixed(2), num:Number(optionNum)};
+	var option = {level:level,title:optionText, price:parseFloat(optionPrice).toFixed(2), discountPrice:optionDiscountPrice, num:Number(optionNum), personBuyLimit: optionPersonBuyLimit};
 	optionMap.set(levelKey,option);
-	// optionPriceMap.set(levelKey,optionPrice);
-	$("#goodsOption").append("<button onclick='delOption(this,"+level+","+optionMapIndex+")' class=\"btn btn-secondary radius\" type=\"button\" style='margin-right: 5px;margin-bottom: 3px'><i class=\"Hui-iconfont\">&#xe632;</i> "+optionText + " |￥" + optionPrice + " |￥" + optionDiscountPrice + " |" + optionNum +"</button>");
+
+	if(optionDiscountPrice == ''){
+		optionDiscountPrice = "未设置";
+	}else{
+		optionDiscountPrice = "￥" + optionDiscountPrice;
+	}
+
+	if(optionPersonBuyLimit == ''){
+		optionPersonBuyLimit = "未设置限购量";
+	}
+	$("#goodsOption").append("<button onclick='delOption(this,"+level+","+optionMapIndex+")' class=\"btn btn-secondary radius\" type=\"button\" style='margin-right: 5px;margin-bottom: 3px'><i class=\"Hui-iconfont\">&#xe632;</i> "+optionText + " |￥" + optionPrice + " |" + optionDiscountPrice + " |" + optionNum + " |" + optionPersonBuyLimit +"</button>");
 	optionMapIndex = optionMapIndex + 1;
 	$("#optionText").val("");
 	$("#optionPrice").val("");
 	$("#optionDiscountPrice").val("");
 	$("#optionNum").val("");
+	$("#optionPersonBuyLimit").val("");
 }
 
 //把图片流放入map中
@@ -621,13 +658,7 @@ function submitGoods(type) {
 	formData.append("unit",$("#unit").val());
 	var isGreat = Number($("#isGreat").find("option:selected").val());
 	formData.append("isGreat",isGreat);
-
-	// formData.append("fileContent",JSON.stringify(contentPic));
-
-
-	// $.post("http://localhost:8080/goods/insertGoods",{},function () {
-	// 	alert("yes");
-	// })
+	formData.append("goodsEndTime",$("#datetimepicker").val());
 
 	$.ajax({
 		contentType:"multipart/form-data",
@@ -642,6 +673,7 @@ function submitGoods(type) {
 			console.log(result);
 			if(result.code == 0){
 				layer.msg("添加成功");
+				layer_close();
 			}else{
 				layer.msg(result.message);
 			}
@@ -653,7 +685,6 @@ function submitGoods(type) {
 	});
 	// parent.location.reload();
 	//关闭当前窗口并刷新列表页面
-	layer_close();
 	// window.location.href = "goods-list.html";
 }
 </script>

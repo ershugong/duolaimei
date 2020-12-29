@@ -59,6 +59,12 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>限购量：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="optionPersonBuyLimit" name="">
+			</div>
+		</div>
+		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button onClick="submitGoodsOption(1);" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 更新 </button>
 				<button onClick="del();" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 删除 </button>
@@ -94,10 +100,17 @@ $(function(){
 			var data = result.data;
 			$("#optionNum").val(data.num);
 			$("#optionPrice").val(data.price);
+			//折扣价
 			if(data.discountPrice == null){
 				$("#optionDiscountPrice").val("");
 			}else{
 				$("#optionDiscountPrice").val(data.discountPrice);
+			}
+			//限购量
+			if(data.personBuyLimit == null){
+				$("#optionPersonBuyLimit").val("");
+			}else{
+				$("#optionPersonBuyLimit").val(data.personBuyLimit);
 			}
 			$("#optionTitle").val(data.title);
 		}else{
@@ -143,6 +156,7 @@ function submitGoodsOption() {
 	formData.append("title",$("#optionTitle").val());
 	formData.append("discountPrice",$("#optionDiscountPrice").val());
 	formData.append("num",$("#optionNum").val());
+	formData.append("personBuyLimit",$("#optionPersonBuyLimit").val())
 
 	$.ajax({
 		contentType:"multipart/form-data",
@@ -183,24 +197,6 @@ function del() {
 
 	});
 }
-
-//添加自定义选项
-// function addOption(level){
-// 	var levelKey = "level" + level + "_" + optionMapIndex;
-// 	var optionText = $("#optionText").val();
-// 	var optionPrice = $("#optionPrice").val();
-// 	var optionDiscountPrice = $("#optionDiscountPrice").val();
-// 	var optionNum = $("#optionNum").val();
-// 	var option = {level:level,title:optionText, price:parseFloat(optionPrice).toFixed(2), discountPrice:parseFloat(optionDiscountPrice).toFixed(2), num:Number(optionNum)};
-// 	optionMap.set(levelKey,option);
-// 	// optionPriceMap.set(levelKey,optionPrice);
-// 	$("#goodsOption").append("<button onclick='delOption(this,"+level+","+optionMapIndex+")' class=\"btn btn-secondary radius\" type=\"button\" style='margin-right: 5px;margin-bottom: 3px'><i class=\"Hui-iconfont\">&#xe632;</i> "+optionText + " |￥" + optionPrice + " |￥" + optionDiscountPrice + " |" + optionNum +"</button>");
-// 	optionMapIndex = optionMapIndex + 1;
-// 	$("#optionText").val("");
-// 	$("#optionPrice").val("");
-// 	$("#optionDiscountPrice").val("");
-// 	$("#optionNum").val("");
-// }
 </script>
 </body>
 </html>

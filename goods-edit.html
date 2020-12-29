@@ -97,12 +97,19 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">限购时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input style="width: 200px" type="text" class="input-text" value="" id="datetimepicker">
+			</div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">类型选项：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="" placeholder="选项标题" id="optionText" name="" style="width: 200px">
 				<input type="text" class="input-text" value="" placeholder="价格，例子: 4.00" id="optionPrice" name="" style="width: 150px">
 				<input type="text" class="input-text" value="" placeholder="折扣价，例子: 3.00" id="optionDiscountPrice" name="" style="width: 150px">
 				<input type="text" class="input-text" value="" placeholder="库存" id="optionNum" name="" style="width: 100px">
+				<input type="text" class="input-text" value="" placeholder="限购量" id="optionPersonBuyLimit" name="" style="width: 100px">
 				<button onClick="addOption(1)" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 添加</button>
 			</div>
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2" id="goodsOption" style="margin-top: 15px">
@@ -224,6 +231,7 @@ $(function(){
 			$("#headPic").attr("src", apiHeader+data.headPic);
 			$("#classifySelect").val(data.classifyId);
 			$("#unit").val(data.unit);
+			$("#datetimepicker").val(data.endTime == null ? "" : data.endTime);
 			if(data.isGreat == 1){
 				$("#isTheGreat").attr('selected','true');
 			}else{
@@ -239,12 +247,18 @@ $(function(){
 					var optionDiscountPrice = goodsOptionList[i].discountPrice;
 					var optionNum = goodsOptionList[i].num;
 					var optionLevel = goodsOptionList[i].level;
-					var option = {level:optionLevel,title:optionText, price:parseFloat(optionPrice).toFixed(2), discountPrice:parseFloat(optionDiscountPrice).toFixed(2), num:Number(optionNum)};
+					var optionPersonBuyLimit = goodsOptionList[i].personBuyLimit;
+					var option = {level:optionLevel,title:optionText, price:parseFloat(optionPrice).toFixed(2), discountPrice:parseFloat(optionDiscountPrice).toFixed(2), num:Number(optionNum), personBuyLimit: Number(optionPersonBuyLimit)};
 					optionMap.set(levelKey,option);
 					if(optionDiscountPrice == null){
 						optionDiscountPrice = "未设置";
+					}else{
+						optionDiscountPrice = "￥" + optionDiscountPrice;
 					}
-					$("#goodsOption").append("<button onclick='goodsOption_edit(\"标签编辑\",\"goods-option-edit.html?id="+ goodsOptionList[i].id +"\")' class=\"btn btn-secondary radius\" type=\"button\" style='margin-right: 5px;margin-bottom: 3px'><i class=\"Hui-iconfont\">&#xe632;</i> "+optionText + " |￥" + optionPrice + " |￥" + optionDiscountPrice + " |" + optionNum +" </button>");
+					if(optionPersonBuyLimit == null){
+						optionPersonBuyLimit = "未设置限购量";
+					}
+					$("#goodsOption").append("<button onclick='goodsOption_edit(\"标签编辑\",\"goods-option-edit.html?id="+ goodsOptionList[i].id +"\")' class=\"btn btn-secondary radius\" type=\"button\" style='margin-right: 5px;margin-bottom: 3px'><i class=\"Hui-iconfont\">&#xe632;</i> "+optionText + " |￥" + optionPrice + " |" + optionDiscountPrice + " |" + optionNum + " |" + optionPersonBuyLimit +" </button>");
 					optionMapIndex = optionMapIndex + 1;
 				}
 			}
@@ -351,6 +365,19 @@ $(function(){
 		}else{
 			layer.msg(result.message);
 		}
+	});
+
+	//限时购物的时间选择器
+	$("#datetimepicker").datetimepicker({
+		format: "yyyy-mm-dd hh:ii:00",
+		language: "zh-CN",
+		autoclose: true,
+		minView: "hour",
+		maxView: "decade",
+		todayBtn: "linked",
+		pickerPosition: "bottom-left"
+	}).on("click",function(){
+		$("#datetimepicker").datetimepicker("setEndDate",$("#datetimepicker").value());
 	});
 
 
@@ -689,6 +716,7 @@ function submitGoods(type) {
 	formData.append("unit",$("#unit").val());
 	var isGreat = Number($("#isGreat").find("option:selected").val());
 	formData.append("isGreat",isGreat);
+	formData.append("goodsEndTime",$("#datetimepicker").val());
 
 
 	if(map.size > 0){
@@ -717,6 +745,7 @@ function submitGoods(type) {
 			console.log(result);
 			if(result.code == 0){
 				layer.msg("编辑成功");
+				layer_close();
 			}else{
 				layer.msg(result.message);
 			}
@@ -726,7 +755,6 @@ function submitGoods(type) {
 			layer.msg(result);
 		}
 	});
-	layer_close();
 	// window.location.href = "goods-list.html";
 }
 
@@ -813,6 +841,7 @@ function addOption(level){
 	var optionPrice = $("#optionPrice").val();
 	var optionDiscountPrice = $("#optionDiscountPrice").val();
 	var optionNum = $("#optionNum").val();
+	var optionPersonBuyLimit = $("#optionPersonBuyLimit").val();;
 	if(optionText == ''){
 		layer.msg("请输入标签名称");
 		return;
@@ -838,7 +867,17 @@ function addOption(level){
 	// var option = {level:level,title:optionText, price:parseFloat(optionPrice).toFixed(2), discountPrice:parseFloat(optionDiscountPrice).toFixed(2), num:Number(optionNum)};
 	// optionMap.set(levelKey,option);
 	// // optionPriceMap.set(levelKey,optionPrice);
-	$("#goodsOption").append("<button onclick='goodsOption_edit(\"标签编辑\",\"goods-option-edit.html?id="+ optionId +"\")' class=\"btn btn-secondary radius\" type=\"button\" style='margin-right: 5px;margin-bottom: 3px'><i class=\"Hui-iconfont\">&#xe632;</i> "+optionText + " |￥" + optionPrice + " |￥" + optionDiscountPrice + " |" + optionNum +"</button>");
+	if(optionDiscountPrice == ''){
+		optionDiscountPrice = "未设置";
+	}else{
+		optionDiscountPrice = "￥" + optionDiscountPrice;
+	}
+
+	if(optionPersonBuyLimit == ''){
+		optionPersonBuyLimit = "未设置限购量";
+	}
+
+	$("#goodsOption").append("<button onclick='goodsOption_edit(\"标签编辑\",\"goods-option-edit.html?id="+ optionId +"\")' class=\"btn btn-secondary radius\" type=\"button\" style='margin-right: 5px;margin-bottom: 3px'><i class=\"Hui-iconfont\">&#xe632;</i> "+optionText + " |￥" + optionPrice + " |" + optionDiscountPrice + " |" + optionNum + " |" + optionPersonBuyLimit +"</button>");
 	optionMapIndex = optionMapIndex + 1;
 	$("#optionText").val("");
 	$("#optionPrice").val("");

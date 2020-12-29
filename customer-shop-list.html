@@ -18,13 +18,18 @@
 <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
 <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<style>
+	.over {position: fixed; left:0; top:0; width:100%; z-index:100;}
+	.tempContainer {position:fixed; width:100%; margin-right:0px; margin-left:0px; text-align:center; z-index:101;}
+	.amplifyImg {float: left}
+</style>
 <!--[if IE 6]>
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script type="text/javascript" src="lib/jquery/jquery-3.5.1.min.js"></script>
 <script>DD_belatedPNG.fix('*');</script><![endif]-->
 <!--/meta 作为公共模版分离出去-->
 
-<title>订单列表</title>
+<title>用户收货地址列表</title>
 </head>
 <body>
 <!--_header 作为公共模版分离出去-->
@@ -85,18 +90,30 @@
 <!--/_menu 作为公共模版分离出去-->
 
 <section class="Hui-article-box">
-	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav> <!--<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>-->
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 门店信息审核 <span class="c-gray en">&gt;</span> 门店信息列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav> <!--<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>-->
 	<div class="Hui-article">
 		<article class="cl pd-20">
-			<div class="text-c"> 日期范围：
-				<input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}'})" id="logmin" class="input-text Wdate" style="width:120px;">
-				-
-				<input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d'})" id="logmax" class="input-text Wdate" style="width:120px;">
+			<div class="text-c"> 搜索条件：
+<!--				<input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}'})" id="logmin" class="input-text Wdate" style="width:120px;">-->
+<!--				- -->
+<!--				<input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d'})" id="logmax" class="input-text Wdate" style="width:120px;">-->
+				<!--
+				class="select-box"
+				class="select"
+				-->
+				<span id="statusOption" style="margin-right: 10px">
+					<select name="" >
+						<option value="-1" selected>全部</option>
+						<option value="0">审核中</option>
+						<option value="1">通过</option>
+						<option value="2">不通过</option>
+					</select>
+				</span>
 				<input type="text" name="" id="customerName" placeholder=" 用户名" style="width:100px" class="input-text">
-				<input type="text" name="" id="phone" placeholder="用户手机号" style="width:100px" class="input-text">
-				<input type="text" name="" id="goodsName" placeholder="商品名称" style="width:100px" class="input-text">
-				<button name="" id="goodQuery" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜订单</button>
-				<button name="" id="export" style="width: 60px;background-color: #00b7ee;border-color: #3bb4f2" class="btn btn-success" type="submit" onclick="exportExcel()">导出</button>
+				<input type="text" name="" id="shopName" placeholder="门店名" style="width:100px" class="input-text">
+<!--				<input type="text" name="" id="goodsName" placeholder="商品名称" style="width:100px" class="input-text">-->
+				<button name="" id="shopQuery" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜门店</button>
+<!--				<button name="" id="export" style="width: 60px;background-color: #00b7ee;border-color: #3bb4f2" class="btn btn-success" type="submit" onclick="exportExcel()">导出</button>-->
 			</div>
 			<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r">共有数据：<strong id="totalNum"></strong> 条</span> </div>
 			<div class="mt-20">
@@ -105,18 +122,14 @@
 				<table class="table table-border table-bordered table-bg table-hover table-sort">
 					<thead>
 						<tr class="text-c">
-							<th width="80">手机号</th>
-							<th width="100">商品名称</th>
-							<th width="100">标签名称</th>
-							<th width="40">商品单价</th>
-							<th width="40">下单数量</th>
-							<th width="40">数量单位</th>
-							<th width="40">下单金额</th>
-							<th width="80">货物详情</th>
-							<th width="40">订单创建时间</th>
-							<th width="100">门店名称</th>
+							<th width="40">用户名</th>
+							<th width="60">门店名称</th>
+							<th width="40">联系号码</th>
+							<th width="40">工商号</th>
+							<th width="100">审核资料照片</th>
 							<th width="100">收货地址</th>
-							<th width="60">联系人名称</th>
+							<th width="40">审批状态</th>
+							<th width="30">操作</th>
 						</tr>
 					</thead>
 					<tbody id="goodTableBody">
@@ -145,57 +158,66 @@
 <script type="text/javascript">
 	var page = 1;
 	var pages;
+	var picIndex = 1;
 $(function () {
 	//获取所有货物
 	var pageSize = $("#pageSizeShow").find("option:selected").val();
-	$.post(apiHeader + '/order/getUserOrderPages', {pageSize: pageSize},
-			function (text, status) {
+	$.ajax({
+		url: apiHeader + '/shop/getShopPage',
+		data: {pageSize: pageSize},
+		async: false,
+		success: function (text, status) {
 				if (text.code == 0) {
 					var mystr = "";//$("#goodTableBody");
 					var dataArray = text.data.records;
 					pages = text.data.pages;
 					for (var i = 0; i < dataArray.length; i++) {
-						var goodsList = dataArray[i].orderDetailList;
-						// for(var j=0;j<goodsList.length;j++){
-							mystr = mystr + "<tr class='text-c'>";
-							mystr = mystr + "<td>"+dataArray[i].customerPhone+"</td>";
-							mystr = mystr + "<td>"+dataArray[i].goodsName+"</td>";
-							mystr = mystr + "<td>"+dataArray[i].optionTitle+"</td>";
-							if(dataArray[i].discountPrice == null || dataArray[i].discountPrice == 0){
-								mystr = mystr + "<td>"+dataArray[i].price+"</td>";
-							}else{
-								mystr = mystr + "<td>"+dataArray[i].discountPrice+"</td>";
-							}
-							mystr = mystr + "<td>"+dataArray[i].goodsNum+"</td>";
-							mystr = mystr + "<td>"+dataArray[i].unit+"</td>";
-							var price = 0;
-							if(dataArray[i].discountPrice == null || dataArray[i].discountPrice == 0){
-								price = dataArray[i].price;
-							}else{
-								price = dataArray[i].discountPrice;
-							}
-							var totalPrice = accMul(price,dataArray[i].goodsNum);
-							mystr = mystr + "<td>"+totalPrice+"</td>";
-							var content = dataArray[i].content;//.replaceAll(",","<br/>");
-							mystr = mystr + "<td>"+content+"</td>";
-							mystr = mystr + "<td>"+dataArray[i].createTime+"</td>";
-							mystr = mystr + "<td>"+dataArray[i].shopName+"</td>";
-							mystr = mystr + "<td>"+dataArray[i].address+"</td>";
-							mystr = mystr + "<td>"+dataArray[i].customerName+"</td>";
-							mystr = mystr + "</tr>";
-						// }
+						mystr = mystr + "<tr class='text-c'>";
+						mystr = mystr + "<td>"+dataArray[i].customerName+"</td>";
+						mystr = mystr + "<td>"+dataArray[i].shopName+"</td>";
+						mystr = mystr + "<td>"+dataArray[i].shopPhone+"</td>";
+						mystr = mystr + "<td>"+dataArray[i].businessNo+"</td>";
+						//工商照片 分割字符串
+						var picStr = dataArray[i].businessPic.split(',');
+						var pic = "<td><div class=\"over\"></div>";
 
+						/***
+						 *
+						 * <div class="over"></div><!--背景层-->
+						 <div class="amplifyImg"><!--注意：此处的amlifyImg不可少-->
+						 <img src="static/h-ui/images/dataTable/sort_asc.png"/><!-- 此处是引入图片的路径 -->
+						 </div>
+						 */
+						for(var j = 0;j<picStr.length; j++){
+							var divId = "amplifyImg" + picIndex;
+							pic = pic + "<div onclick='PicOpen("+picIndex+")' id='" + divId + "' class=\"amplifyImg\"><img style='width: 85px;height: 45px;margin-left: 5px' src=\"" + apiHeader + picStr[j] + "\"/></div>";//<td><a href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')"><img width="100" class="picture-thumb" src="pic/200x150.jpg"></a></td>
+							picIndex = picIndex + 1;
+						}
+						pic = pic + "</td>";
+						mystr = mystr + pic;
+						mystr = mystr + "<td>"+dataArray[i].address+"</td>";
+						if(dataArray[i].status == 0){
+							mystr = mystr + "<td>待审核</td>";
+						}else if(dataArray[i].status == 1){
+							mystr = mystr + "<td>通过</td>";
+						}else{
+							mystr = mystr + "<td>不通过</td>";
+						}
+
+						//操作
+						mystr = mystr + "<td><a onclick='auditShop("+ dataArray[i].id +",1)' style='color: green'>通过</a><a onclick='auditShop("+ dataArray[i].id +",2)' style='color: red;margin-left: 10px'>不通过</a></td>";
 					}
 					$("#goodTableBody").append(mystr);
 					$("#totalNum").text(text.data.total);
 				} else {
 					window.location.href = "login.html";
 				}
-			});
+			}
+	});
 
 
 	//点击查询
-	$("#goodQuery").click(function () {
+	$("#shopQuery").click(function () {
     search()
 	});
 
@@ -229,57 +251,158 @@ $(function () {
 		queryGoodsList(name,startTime,endTime,page,pageSize,phone,goodsName,customerName);
 	});
 });
+
+//图片放大
+function PicOpen(picIndex){
+	var divId = "amplifyImg" + picIndex;
+	var imgsObj = $('#' + divId + ' img');//需要放大的图像
+	// if(imgsObj){
+		// $.each(imgsObj,function(){
+		// 	$(this).click(function(){
+				var currImg = imgsObj;
+				coverLayer(1);
+				var tempContainer = $('<div class=tempContainer></div>');//图片容器
+				with(tempContainer){//width方法等同于$(this)
+					appendTo("body");
+					var windowWidth=$(window).width();
+					var windowHeight=$(window).height();
+					//获取图片原始宽度、高度
+					var orignImg = new Image();
+					orignImg.src =currImg.attr("src") ;
+					var currImgWidth= orignImg.width;
+					var currImgHeight = orignImg.height;
+					if(currImgWidth<windowWidth){//为了让图片不失真，当图片宽度较小的时候，保留原图
+						if(currImgHeight<windowHeight){
+							var topHeight=(windowHeight-currImgHeight)/2;
+							if(topHeight>35){/*此处为了使图片高度上居中显示在整个手机屏幕中：因为在android,ios的微信中会有一个title导航，35为title导航的高度*/
+								topHeight=topHeight-35;
+								css('top',topHeight);
+							}else{
+								css('top',0);
+							}
+							html('<img border=0 src=' + currImg.attr('src') + '>');
+						}else{
+							css('top',0);
+							html('<img border=0 src=' + currImg.attr('src') + ' height='+windowHeight+'>');
+						}
+					}else{
+						var currImgChangeHeight=(currImgHeight*windowWidth)/currImgWidth;
+						if(currImgChangeHeight<windowHeight){
+							var topHeight=(windowHeight-currImgChangeHeight)/2;
+							if(topHeight>35){
+								topHeight=topHeight-35;
+								css('top',topHeight);
+							}else{
+								css('top',0);
+							}
+							html('<img border=0 src=' + currImg.attr('src') + ' width='+windowWidth+';>');
+						}else{
+							css('top',0);
+							html('<img border=0 src=' + currImg.attr('src') + ' width='+windowWidth+'; height='+windowHeight+'>');
+						}
+					}
+				}
+				tempContainer.click(function(){
+					$(".tempContainer").remove();
+					coverLayer(0);
+				});
+		// 	});
+		// });
+	// }
+	// else{
+	// 	return false;
+	// }
+}
+
+//使用禁用蒙层效果
+function coverLayer(tag){
+	with($('.over')){
+		if(tag==1){
+			css('height',$(document).height());
+			css('display','block');
+			css('opacity',1);
+			css("background-color","#FFFFFF");
+			css("background-color","rgba(0,0,0,0.7)" );  //蒙层透明度
+		}
+		else{
+			css('display','none');
+		}
+	}
+}
+
+function auditShop(id,status) {
+	$.post(apiHeader + '/shop/saveShop',{id:id,status:status},function (res) {
+		if(res.code == 0){
+			//刷新当前页面
+			window.location.reload();
+		}else{
+			layer.msg(res.message);
+		}
+	})
+}
+
 function search () {
-  var name = $("#menuName").val();
-  var startTime = $("#logmin").val();
-  var endTime = $("#logmax").val();
   var pageSize = $("#pageSizeShow").find("option:selected").val();
-  var goodsName = $("#goodsName").val();
-  var phone = $("#phone").val();
+  var shopName = $("#shopName").val();
   var customerName = $("#customerName").val();
-  page = 1;
-  queryGoodsList(name,startTime,endTime,page,pageSize,phone,goodsName,customerName);
+  var statusOption = $("#status").find("option:selected").val();
+  if(statusOption == "-1"){
+  	//todo 
+  	statusOption = null;
+  }else{
+	  statusOption = Number(statusOption);
+  }
+
+
+	page = 1;
+  queryGoodsList(page,pageSize,shopName,customerName,statusOption);
 }
 //条件查询商品
-function queryGoodsList(name,startTime,endTime,page,pageSize,phone,goodsName,customerName) {
-	$.post(apiHeader + '/order/getUserOrderPages', {customerName: name,startTime: startTime,endTime: endTime,page: page,pageSize: pageSize,phone: phone,customerName: customerName,goodsName: goodsName},
+function queryGoodsList(page,pageSize,shopName,customerName,status) {
+	$.post(apiHeader + '/shop/getShopPage', {cpage: page,pageSize: pageSize,shopName: shopName,customerName: customerName,status:status},
 			function (text, status) {
 				console.log(text);
 
 				if (text.code == 0) {
 					$("#goodTableBody").html("");
-					var mystr = "";
+					var mystr = "";//$("#goodTableBody");
 					var dataArray = text.data.records;
+					pages = text.data.pages;
 					for (var i = 0; i < dataArray.length; i++) {
-						// for(var j=0;j<goodsList.length;j++){
 						mystr = mystr + "<tr class='text-c'>";
-						mystr = mystr + "<td>"+dataArray[i].customerPhone+"</td>";
-						mystr = mystr + "<td>"+dataArray[i].goodsName+"</td>";
-						mystr = mystr + "<td>"+dataArray[i].optionTitle+"</td>";
-						if(dataArray[i].discountPrice == null || dataArray[i].discountPrice == 0){
-							mystr = mystr + "<td>"+dataArray[i].price+"</td>";
-						}else{
-							mystr = mystr + "<td>"+dataArray[i].discountPrice+"</td>";
-						}
-						mystr = mystr + "<td>"+dataArray[i].goodsNum+"</td>";
-						mystr = mystr + "<td>"+dataArray[i].unit+"</td>";
-						var price = 0;
-						if(dataArray[i].discountPrice == null || dataArray[i].discountPrice == 0){
-							price = dataArray[i].price;
-						}else{
-							price = dataArray[i].discountPrice;
-						}
-						var totalPrice = accMul(price,dataArray[i].goodsNum);
-						mystr = mystr + "<td>"+totalPrice+"</td>";
-						var content = dataArray[i].content;//.replaceAll(",","<br/>");
-						mystr = mystr + "<td>"+content+"</td>";
-						mystr = mystr + "<td>"+dataArray[i].createTime+"</td>";
-						mystr = mystr + "<td>"+dataArray[i].shopName+"</td>";
-						mystr = mystr + "<td>"+dataArray[i].address+"</td>";
 						mystr = mystr + "<td>"+dataArray[i].customerName+"</td>";
-						mystr = mystr + "</tr>";
-						// }
+						mystr = mystr + "<td>"+dataArray[i].shopName+"</td>";
+						mystr = mystr + "<td>"+dataArray[i].shopPhone+"</td>";
+						mystr = mystr + "<td>"+dataArray[i].businessNo+"</td>";
+						//工商照片 分割字符串
+						var picStr = dataArray[i].businessPic.split(',');
+						var pic = "<td><div class=\"over\"></div>";
 
+						/***
+						 *
+						 * <div class="over"></div><!--背景层-->
+						 <div class="amplifyImg"><!--注意：此处的amlifyImg不可少-->
+						 <img src="static/h-ui/images/dataTable/sort_asc.png"/><!-- 此处是引入图片的路径 -->
+						 </div>
+						 */
+						for(var j = 0;j<picStr.length; j++){
+							var divId = "amplifyImg" + picIndex;
+							pic = pic + "<div onclick='PicOpen("+picIndex+")' id='" + divId + "' class=\"amplifyImg\"><img style='width: 85px;height: 45px;margin-left: 5px' src=\"" + apiHeader + picStr[j] + "\"/></div>";//<td><a href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')"><img width="100" class="picture-thumb" src="pic/200x150.jpg"></a></td>
+							picIndex = picIndex + 1;
+						}
+						pic = pic + "</td>";
+						mystr = mystr + pic;
+						mystr = mystr + "<td>"+dataArray[i].address+"</td>";
+						if(dataArray[i].status == 0){
+							mystr = mystr + "<td>待审核</td>";
+						}else if(dataArray[i].status == 1){
+							mystr = mystr + "<td>通过</td>";
+						}else{
+							mystr = mystr + "<td>不通过</td>";
+						}
+
+						//操作
+						mystr = mystr + "<td><a onclick='auditShop("+ dataArray[i].id +",1)' style='color: green'>通过</a><a onclick='auditShop("+ dataArray[i].id +",2)' style='color: red;margin-left: 10px'>不通过</a></td>";
 					}
 					$("#goodTableBody").append(mystr);
 					$("#totalNum").text(text.data.total);
