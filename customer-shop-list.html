@@ -107,6 +107,7 @@
 						<option value="0">审核中</option>
 						<option value="1">通过</option>
 						<option value="2">不通过</option>
+						<option value="3">白名单</option>
 					</select>
 				</span>
 				<input type="text" name="" id="customerName" placeholder=" 用户名" style="width:100px" class="input-text">
@@ -127,9 +128,9 @@
 							<th width="40">联系号码</th>
 							<th width="40">工商号</th>
 							<th width="100">审核资料照片</th>
-							<th width="100">收货地址</th>
+							<th width="60">收货地址</th>
 							<th width="40">审批状态</th>
-							<th width="30">操作</th>
+							<th width="50">操作</th>
 						</tr>
 					</thead>
 					<tbody id="goodTableBody">
@@ -190,7 +191,7 @@ $(function () {
 						 */
 						for(var j = 0;j<picStr.length; j++){
 							var divId = "amplifyImg" + picIndex;
-							pic = pic + "<div onclick='PicOpen("+picIndex+")' id='" + divId + "' class=\"amplifyImg\"><img style='width: 85px;height: 45px;margin-left: 5px' src=\"" + apiHeader + picStr[j] + "\"/></div>";//<td><a href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')"><img width="100" class="picture-thumb" src="pic/200x150.jpg"></a></td>
+							pic = pic + "<div onclick='PicOpen("+picIndex+")' id='" + divId + "' class=\"amplifyImg\"><img style='width: 80px;height: 40px;margin-left: 5px' src=\"" + apiHeader + picStr[j] + "\"/></div>";//<td><a href="javascript:;" onClick="picture_edit('图库编辑','picture-show.html','10001')"><img width="100" class="picture-thumb" src="pic/200x150.jpg"></a></td>
 							picIndex = picIndex + 1;
 						}
 						pic = pic + "</td>";
@@ -200,12 +201,15 @@ $(function () {
 							mystr = mystr + "<td>待审核</td>";
 						}else if(dataArray[i].status == 1){
 							mystr = mystr + "<td>通过</td>";
-						}else{
+						}else if(dataArray[i].status == 2){
 							mystr = mystr + "<td>不通过</td>";
+						}else{
+							mystr = mystr + "<td>白名单</td>";
 						}
 
 						//操作
-						mystr = mystr + "<td><a onclick='auditShop("+ dataArray[i].id +",1)' style='color: green'>通过</a><a onclick='auditShop("+ dataArray[i].id +",2)' style='color: red;margin-left: 10px'>不通过</a></td>";
+						var id = JSON.stringify(dataArray[i].id);
+						mystr = mystr + "<td><a onclick='auditShop("+ id +",1)' style='color: green'>通过</a><a onclick='auditShop("+ id +",2)' style='color: red;margin-left: 10px'>不通过</a><a onclick='auditShop("+ id +",3)' style='color: dodgerblue;margin-left: 10px'>白名单</a></td>";
 					}
 					$("#goodTableBody").append(mystr);
 					$("#totalNum").text(text.data.total);
@@ -331,30 +335,32 @@ function coverLayer(tag){
 }
 
 function auditShop(id,status) {
-	$.post(apiHeader + '/shop/saveShop',{id:id,status:status},function (res) {
-		if(res.code == 0){
-			//刷新当前页面
-			window.location.reload();
-		}else{
-			layer.msg(res.message);
+	$.ajax({
+		url: apiHeader + '/shop/saveShop',
+		data: {id:id,status:status},
+		method: 'post',
+		success: function (res) {
+			if(res.code == 0){
+				//刷新当前页面
+				window.location.reload();
+			}else{
+				layer.msg(res.message);
+			}
 		}
-	})
+	});
 }
 
 function search () {
   var pageSize = $("#pageSizeShow").find("option:selected").val();
   var shopName = $("#shopName").val();
   var customerName = $("#customerName").val();
-  var statusOption = $("#status").find("option:selected").val();
+  var statusOption = $("#statusOption").find("option:selected").val();
   if(statusOption == "-1"){
-  	//todo 
-  	statusOption = null;
+	  statusOption = null;
   }else{
 	  statusOption = Number(statusOption);
   }
-
-
-	page = 1;
+  page = 1;
   queryGoodsList(page,pageSize,shopName,customerName,statusOption);
 }
 //条件查询商品
@@ -397,12 +403,14 @@ function queryGoodsList(page,pageSize,shopName,customerName,status) {
 							mystr = mystr + "<td>待审核</td>";
 						}else if(dataArray[i].status == 1){
 							mystr = mystr + "<td>通过</td>";
-						}else{
+						}else if(dataArray[i].status == 2){
 							mystr = mystr + "<td>不通过</td>";
+						}else{
+							mystr = mystr + "<td>白名单</td>";
 						}
 
 						//操作
-						mystr = mystr + "<td><a onclick='auditShop("+ dataArray[i].id +",1)' style='color: green'>通过</a><a onclick='auditShop("+ dataArray[i].id +",2)' style='color: red;margin-left: 10px'>不通过</a></td>";
+						mystr = mystr + "<td><a onclick='auditShop("+ dataArray[i].id +",1)' style='color: green'>通过</a><a onclick='auditShop("+ dataArray[i].id +",2)' style='color: red;margin-left: 10px'>不通过</a><a onclick='auditShop("+ id +",3)' style='color: dodgerblue;margin-left: 10px'>白名单</a></td>";
 					}
 					$("#goodTableBody").append(mystr);
 					$("#totalNum").text(text.data.total);

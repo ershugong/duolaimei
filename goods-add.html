@@ -15,7 +15,6 @@
 <link rel="Shortcut Icon" href="favicon.ico" />
 <!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5.js"></script>
-<script type="text/javascript" src="lib/jquery/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
 <![endif]-->
 <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
@@ -214,6 +213,8 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
 <script type="text/javascript" src="lib/jquery/common.js"></script>
+<script type="text/javascript" src="lib/jquery/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="lib/jquery/bootstrap-datetimepicker.zh-CN.js"></script>
 <script type="text/javascript">
 
 	//数据对象（货物详情图片）
@@ -597,6 +598,10 @@ function closeMyself() {
 	console.log("ssssss");
 	var index = parent.layer.getFrameIndex(window.name);
 	parent.layer.close(index);
+}
+
+function lowPic(file) {
+	
 }
 
 //获取保存/上架
